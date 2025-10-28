@@ -42,6 +42,28 @@ app.post("/user/signup", (req, res) => {
   });
 });
 
+app.post("/user/login", (req, res) => {
+  const { email, password } = req.body;
+
+  const checkUserQuery = "SELECT * FROM users WHERE email = ?";
+  db.query(checkUserQuery, [email], (err, results) => {
+    if (results.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "user not found in the database" });
+    }
+    const user = results[0];
+    if (user.password !== password) {
+      return res.status(401).json({ message: "Incorrect password" });
+    }
+
+    res.status(200).json({
+      message: "User logged in successfully",
+      success: true,
+    });
+  });
+});
+
 app.listen(3000, () => {
   console.log("Server running on port 3000");
 });
