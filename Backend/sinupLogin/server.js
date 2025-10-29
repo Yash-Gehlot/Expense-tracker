@@ -1,26 +1,13 @@
 const express = require("express");
 const cors = require("cors");
-const mysql = require("mysql2");
 const bcrypt = require("bcrypt");
+const exprenseRoute = require("../Home/expense");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "yash gehlot",
-  database: "expense",
-});
-
-db.connect((err) => {
-  if (err) {
-    console.error("Database connection failed:", err);
-  } else {
-    console.log("Connected to MySQL Database: expense");
-  }
-});
+app.use("/expense", exprenseRoute);
 
 app.post("/user/signup", (req, res) => {
   const { name, email, password } = req.body;
